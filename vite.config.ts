@@ -2,9 +2,11 @@ import path from 'path'
 import react from '@vitejs/plugin-react'
 import ssr from 'vite-plugin-ssr/plugin'
 import { defineConfig } from 'vite'
+import vercel from 'vite-plugin-vercel'
+import vercelSsr from '@magne4000/vite-plugin-vercel-ssr'
 
 export default defineConfig({
-  plugins: [react(), ssr()],
+  plugins: [react(), ssr(), vercel(), vercelSsr()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
