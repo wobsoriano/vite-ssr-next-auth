@@ -1,9 +1,9 @@
-import reactRefresh from "@vitejs/plugin-react-refresh";
-import ssr from "vite-plugin-ssr/plugin";
-import { UserConfig } from "vite";
+import react from '@vitejs/plugin-react'
+import ssr from 'vite-plugin-ssr/plugin'
+import { UserConfig } from 'vite'
 
 const config: UserConfig = {
-  plugins: [reactRefresh(), ssr()],
-};
+  plugins: [react(), ssr()]
+}
 
-export default config;
+export default config

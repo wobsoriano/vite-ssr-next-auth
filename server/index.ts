@@ -1,15 +1,14 @@
-require('dotenv').config();
-
-import express from "express";
-import { createPageRender } from "vite-plugin-ssr";
-import fetch from 'node-fetch';
+import express from 'express'
+import { renderPage } from 'vite-plugin-ssr'
+import * as nodeFetch from 'node-fetch'
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import NextAuthHandler from './auth/next';
+import { authHandler as NextAuthHandler } from './auth/next';
 
-
-
-global.fetch = fetch;
+// @ts-ignore
+global.fetch = nodeFetch.fetch;
+// @ts-ignore
+global.Request = nodeFetch.Request;
 
 const isProduction = process.env.NODE_ENV === "production";
 const root = `${__dirname}/..`;
@@ -22,19 +21,19 @@ async function startServer() {
   app.use(bodyParser.json())
   app.use(cookieParser())
 
-  let viteDevServer;
   if (isProduction) {
-    app.use(express.static(`${root}/dist/client`, { index: false }));
+    const sirv = require('sirv')
+    app.use(sirv(`${root}/dist/client`))
   } else {
-    const vite = require("vite");
-    viteDevServer = await vite.createServer({
-      root,
-      server: { middlewareMode: true },
-    });
-    app.use(viteDevServer.middlewares);
+    const vite = require('vite')
+    const viteDevMiddleware = (
+      await vite.createServer({
+        root,
+        server: { middlewareMode: true }
+      })
+    ).middlewares
+    app.use(viteDevMiddleware)
   }
-
-  const renderPage = createPageRender({ viteDevServer, isProduction, root });
 
   app.get("/api/auth/*", (req, res) => {
     const nextauth = req.path.split("/");
@@ -52,15 +51,17 @@ async function startServer() {
     NextAuthHandler(req, res)
   });
 
-  app.get("*", async (req, res, next) => {
-    const url = req.originalUrl;
-    const pageContext = {
-      url,
-    };
-    const result = await renderPage(pageContext);
-    if (result.nothingRendered) return next();
-    res.status(result.statusCode).send(result.renderResult);
-  });
+  app.get('*', async (req, res, next) => {
+    const pageContextInit = {
+      urlOriginal: req.originalUrl
+    }
+    const pageContext = await renderPage(pageContextInit)
+    const { httpResponse } = pageContext
+    if (!httpResponse) return next()
+    const { body, statusCode, contentType } = httpResponse
+    res.status(statusCode).type(contentType).send(body)
+  })
+
 
   const port = process.env.PORT || 3000;
   app.listen(port);

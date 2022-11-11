@@ -1,16 +1,20 @@
+import path from 'path'
+import type { Request, Response } from 'express';
+import * as dotenv from 'dotenv'
+dotenv.config({ path: path.resolve(__dirname, '../../.env') })
+
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import GithubProvider from 'next-auth/providers/github';
 
 const options = {
     providers: [
-        Providers.Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            authorizationUrl:
-                'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code',
+        GithubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string
         }),
     ],
 };
 
-const authHandler = (req, res) => NextAuth(req, res, options);
-export default authHandler;
+const authHandler = (req: Request, res: Response) => NextAuth(req, res, options);
+
+export { authHandler };
