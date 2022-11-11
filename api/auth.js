@@ -15,8 +15,7 @@ const authOptions = {
 }
 
 export default function handler (req, res) {
-  console.log(req)
-  const nextauth = req.path.split('/')
+  const nextauth = req.query.split('/')
   nextauth.splice(0, 3)
   req.query.nextauth = nextauth
 
