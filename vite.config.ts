@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [react(), ssr()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './')
+      '@': path.resolve(__dirname, './'),
+      'next-auth/providers/github': 'node_modules/next-auth/providers/github.js'
     }
   },
   define: {
