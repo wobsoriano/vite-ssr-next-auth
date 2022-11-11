@@ -22,5 +22,5 @@ cd .vercel/output/functions/index.func
 ncc build --minify --out . index.js
 
 # 7. Bundle render function to a single file.
-cd .vercel/output/functions/auth.func
+cd ../auth.func
 ncc build --minify --out . index.js
