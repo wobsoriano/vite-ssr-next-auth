@@ -5,7 +5,7 @@ global.Request = Request
 
 export default async function handler (req, res) {
   const pageContextInit = {
-    urlOriginal: req.originalUrl,
+    urlOriginal: req.originalUrl || req.url,
     req,
     res
   }
