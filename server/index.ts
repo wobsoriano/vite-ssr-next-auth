@@ -1,14 +1,12 @@
 import express from 'express'
 import { renderPage } from 'vite-plugin-ssr'
-import * as nodeFetch from 'node-fetch'
+import { fetch, Request } from 'node-fetch-native'
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { authHandler as NextAuthHandler } from './auth/next';
 
-// @ts-ignore
-global.fetch = nodeFetch.fetch;
-// @ts-ignore
-global.Request = nodeFetch.Request;
+global.fetch = fetch;
+global.Request = Request;
 
 const isProduction = process.env.NODE_ENV === "production";
 const root = `${__dirname}/..`;
