@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
-import type { Request, Response } from 'express'
+import type { Request as ExpressRequest, Response as ExpressResponse } from 'express'
 import * as dotenv from 'dotenv'
 
 import NextAuth, { NextAuthOptions } from 'next-auth'
@@ -18,4 +18,10 @@ export const authOptions: NextAuthOptions = {
   ]
 }
 
-export const authHandler = (req: Request, res: Response) => NextAuth(req, res, authOptions)
+export const NextAuthHandler = (req: ExpressRequest, res: ExpressResponse) => {
+  const nextauth = req.path.split('/')
+  nextauth.splice(0, 3)
+  req.query.nextauth = nextauth
+
+  NextAuth(req, res, authOptions)
+}

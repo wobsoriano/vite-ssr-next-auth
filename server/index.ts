@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 // eslint-disable-next-line camelcase
 import { unstable_getServerSession } from 'next-auth/next'
-import { authHandler as NextAuthHandler, authOptions } from './handler'
+import { NextAuthHandler, authOptions } from './handler'
 
 global.fetch = fetch
 global.Request = Request
@@ -36,21 +36,8 @@ async function startServer () {
     app.use(viteDevMiddleware)
   }
 
-  app.get('/api/auth/*', (req, res) => {
-    const nextauth = req.path.split('/')
-    nextauth.splice(0, 3)
-    req.query.nextauth = nextauth
-
-    NextAuthHandler(req, res)
-  })
-
-  app.post('/api/auth/*', (req, res) => {
-    const nextauth = req.path.split('/')
-    nextauth.splice(0, 3)
-    req.query.nextauth = nextauth
-
-    NextAuthHandler(req, res)
-  })
+  app.get('/api/auth/*', NextAuthHandler)
+  app.post('/api/auth/*', NextAuthHandler)
 
   app.get('/api/examples/protected', async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)
