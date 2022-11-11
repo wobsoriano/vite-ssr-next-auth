@@ -1,4 +1,7 @@
 import NextAuth from 'next-auth'
+import express from 'express'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import { fetch, Request } from 'node-fetch-native'
 import GithubProvider from 'next-auth/providers/github'
 
@@ -21,6 +24,12 @@ function NextAuthHandler (req, res) {
 
   NextAuth(req, res, authOptions)
 }
+
+const app = express()
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(cookieParser())
 
 app.get('/api/auth/*', NextAuthHandler)
 app.post('/api/auth/*', NextAuthHandler)
