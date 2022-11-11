@@ -19,4 +19,4 @@ cp -a dist/client/. .vercel/output/static
 
 # 6. Bundle render function to a single file.
 cd .vercel/output/functions/index.func
-npx ncc build --minify --out . index.js
+ncc build --minify --out . index.js
