@@ -1,4 +1,6 @@
 import NextAuth from 'next-auth'
+// eslint-disable-next-line camelcase
+import { unstable_getServerSession } from 'next-auth/next'
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
