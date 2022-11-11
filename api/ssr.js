@@ -4,10 +4,8 @@ import { Request } from 'node-fetch-native'
 global.Request = Request
 
 export default async function handler (req, res) {
-  const { url } = req
-
   const pageContextInit = {
-    url,
+    urlOriginal: req.originalUrl,
     req,
     res
   }
