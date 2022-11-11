@@ -16,8 +16,11 @@ const authOptions = {
 
 export default function handler (req, res) {
   const nextauth = req.url.split('/')
+  console.log(nextauth)
   nextauth.splice(0, 3)
+  console.log(nextauth)
   req.query.nextauth = nextauth
+  console.log(req.query)
 
   NextAuth(req, res, authOptions)
 }
