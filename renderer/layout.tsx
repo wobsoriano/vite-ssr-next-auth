@@ -1,20 +1,20 @@
-import React from 'react'
-import { SessionProvider } from "next-auth/react"
-import Header from "./header"
-import Footer from "./footer"
+import { StrictMode, ReactNode } from 'react'
+import { SessionProvider } from 'next-auth/react'
+import type { Session } from 'next-auth'
+import Header from './header'
+import Footer from './footer'
 import './layout.css'
-import { Session } from 'next-auth'
 
-export { PageLayout };
+export { PageLayout }
 
-function PageLayout({ children, session }: { children: React.ReactNode; session: Session | null }) {
+function PageLayout ({ children, session }: { children: ReactNode; session: Session | null }) {
   return (
-    <React.StrictMode>
+    <StrictMode>
       <SessionProvider session={session}>
        <Header />
         <main>{children}</main>
         <Footer />
       </SessionProvider>
-    </React.StrictMode>
+    </StrictMode>
   )
 }

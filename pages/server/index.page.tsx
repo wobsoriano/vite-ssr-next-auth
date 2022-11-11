@@ -1,6 +1,6 @@
-import type { Session } from "next-auth";
+import type { Session } from 'next-auth'
 
-export function Page({ session }: { session: Session }) {
+export function Page ({ session }: { session: Session }) {
   // As this page uses Server Side Rendering, the `session` will be already
   // populated on render without needing to go through a loading stage.
   return (
@@ -11,7 +11,7 @@ export function Page({ session }: { session: Session }) {
         in <strong>onBeforeRender()</strong> of [vite-plugin-ssr](https://vite-plugin-ssr.com/data-fetching).
       </p>
       <p>
-        Using <strong>unstable_getServerSession()</strong> in{" "}
+        Using <strong>unstable_getServerSession()</strong> in{' '}
         <strong>onBeforeRender()</strong> is the recommended approach if you
         need to support Server Side Rendering with authentication.
       </p>

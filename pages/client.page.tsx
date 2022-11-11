@@ -1,9 +1,9 @@
-export function Page() {
+export function Page () {
   return (
     <>
       <h1>Client Side Rendering</h1>
       <p>
-        This page uses the <strong>useSession()</strong> React Hook in the{" "}
+        This page uses the <strong>useSession()</strong> React Hook in the{' '}
         <strong>&lt;Header/&gt;</strong> component.
       </p>
       <p>
@@ -12,7 +12,7 @@ export function Page() {
       </p>
       <p>
         The advantage of this approach is that session state is shared between
-        pages by using the <strong>Provider</strong> in <strong>_app.js</strong>{" "}
+        pages by using the <strong>Provider</strong> in <strong>_app.js</strong>{' '}
         so that navigation between pages using <strong>useSession()</strong> is
         very fast.
       </p>

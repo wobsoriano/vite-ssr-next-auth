@@ -1,14 +1,14 @@
+import { Root, hydrateRoot, createRoot } from 'react-dom/client'
+import { Session } from 'next-auth'
 import type { PageContextClient } from './types'
-import { PageLayout } from "./layout";
-import ReactDOM from 'react-dom/client'
-import { Session } from 'next-auth';
+import { PageLayout } from './layout'
 
 export const clientRouting = true
 export const hydrationCanBeAborted = true
 
-let root: ReactDOM.Root
+let root: Root
 
-export async function render(pageContext: PageContextClient & { session: Session }) {
+export function render (pageContext: PageContextClient & { session: Session }) {
   const { Page, pageProps, session } = pageContext
   const page = (
     <PageLayout session={session}>
@@ -17,10 +17,10 @@ export async function render(pageContext: PageContextClient & { session: Session
   )
   const container = document.getElementById('page-view')!
   if (pageContext.isHydration) {
-    root = ReactDOM.hydrateRoot(container, page)
+    root = hydrateRoot(container, page)
   } else {
     if (!root) {
-      root = ReactDOM.createRoot(container)
+      root = createRoot(container)
     }
     root.render(page)
   }

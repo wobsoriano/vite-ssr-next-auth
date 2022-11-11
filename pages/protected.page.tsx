@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
-import AccessDenied from "@/renderer/access-denied"
+import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import AccessDenied from '@/renderer/access-denied'
 
-export function Page() {
+export function Page () {
   const { data: session } = useSession()
   const [content, setContent] = useState()
 
   // Fetch content from protected route
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/examples/protected")
+      const res = await fetch('/api/examples/protected')
       const json = await res.json()
       if (json.content) {
         setContent(json.content)
@@ -17,7 +17,6 @@ export function Page() {
     }
     fetchData()
   }, [session])
- 
 
   // If no session exists, display access denied message
   if (!session) {
@@ -29,7 +28,7 @@ export function Page() {
     <>
       <h1>Protected Page</h1>
       <p>
-        <strong>{content ?? "\u00a0"}</strong>
+        <strong>{content ?? '\u00A0'}</strong>
       </p>
     </>
   )

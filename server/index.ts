@@ -1,21 +1,23 @@
 import express from 'express'
 import { renderPage } from 'vite-plugin-ssr'
 import { fetch, Request } from 'node-fetch-native'
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import { authHandler as NextAuthHandler, authOptions } from './handler';
-import { unstable_getServerSession } from "next-auth/next"
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+// eslint-disable-next-line camelcase
+import { unstable_getServerSession } from 'next-auth/next'
+import { authHandler as NextAuthHandler, authOptions } from './handler'
 
-global.fetch = fetch;
-global.Request = Request;
+global.fetch = fetch
+global.Request = Request
 
-const isProduction = process.env.NODE_ENV === "production";
-const root = `${__dirname}/..`;
+const isProduction = process.env.NODE_ENV === 'production'
+// eslint-disable-next-line n/no-path-concat
+const root = `${__dirname}/..`
 
-startServer();
+startServer()
 
-async function startServer() {
-  const app = express();
+async function startServer () {
+  const app = express()
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
   app.use(cookieParser())
@@ -34,21 +36,21 @@ async function startServer() {
     app.use(viteDevMiddleware)
   }
 
-  app.get("/api/auth/*", (req, res) => {
-    const nextauth = req.path.split("/");
-    nextauth.splice(0, 3);
-    req.query.nextauth = nextauth;
+  app.get('/api/auth/*', (req, res) => {
+    const nextauth = req.path.split('/')
+    nextauth.splice(0, 3)
+    req.query.nextauth = nextauth
 
     NextAuthHandler(req, res)
-  });
+  })
 
-  app.post("/api/auth/*", (req, res) => {
-    const nextauth = req.path.split("/");
-    nextauth.splice(0, 3);
-    req.query.nextauth = nextauth;
+  app.post('/api/auth/*', (req, res) => {
+    const nextauth = req.path.split('/')
+    nextauth.splice(0, 3)
+    req.query.nextauth = nextauth
 
     NextAuthHandler(req, res)
-  });
+  })
 
   app.get('/api/examples/protected', async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)
@@ -56,12 +58,12 @@ async function startServer() {
     if (session) {
       return res.send({
         content:
-          "This is protected content. You can access this content because you are signed in.",
+          'This is protected content. You can access this content because you are signed in.'
       })
     }
-  
+
     res.send({
-      error: "You must be signed in to view the protected content on this page.",
+      error: 'You must be signed in to view the protected content on this page.'
     })
   })
 
@@ -73,13 +75,12 @@ async function startServer() {
     }
     const pageContext = await renderPage(pageContextInit)
     const { httpResponse } = pageContext
-    if (!httpResponse) return next()
+    if (!httpResponse) { return next() }
     const body = await httpResponse.getBody()
     res.status(httpResponse.statusCode).type(httpResponse.contentType).send(body)
   })
 
-
-  const port = process.env.PORT || 3000;
-  app.listen(port);
-  console.log(`Server running at http://localhost:${port}`);
+  const port = process.env.PORT || 3000
+  app.listen(port)
+  console.log(`Server running at http://localhost:${port}`)
 }

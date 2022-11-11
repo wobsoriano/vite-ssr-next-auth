@@ -24,6 +24,8 @@
     "vite-plugin-ssr": "^0.4.48"
   },
   "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^11.0.0",
+    "eslint": "^8.26.0",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.3",
@@ -32,5 +34,16 @@
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "tsx": "^3.12.0"
-  }
+  },
+  "eslintConfig": {
+    "extends": [
+      "@nuxtjs/eslint-config-typescript"
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": [
+        "off"
+      ]
+    }
+  },
+  "eslintIgnore": ["dist", "node_modules", "*.json"]
 }
