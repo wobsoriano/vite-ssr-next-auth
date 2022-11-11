@@ -1,16 +1,20 @@
 import { renderToStream } from 'react-streaming/server'
+import { unstable_getServerSession } from "next-auth/next"
 import { PageLayout } from './layout'
 import { escapeInject } from 'vite-plugin-ssr'
 import type { PageContextServer } from './types'
+import { authOptions } from '@/server/handler'
 
-export { render }
 // See https://vite-plugin-ssr.com/data-fetching
-export const passToClient = ['pageProps', 'urlPathname']
+export const passToClient = ['pageProps', 'urlPathname', 'session']
 
-async function render(pageContext: PageContextServer) {
+export async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext
+  // Provide initial session
+  const session = await unstable_getServerSession(pageContext.req, pageContext.res, authOptions)
+
   const stream = await renderToStream(
-    <PageLayout>
+    <PageLayout session={session}>
       <Page {...pageProps} />
     </PageLayout>,
     // We don't need streaming for a pre-rendered app.
@@ -21,7 +25,7 @@ async function render(pageContext: PageContextServer) {
   // See https://vite-plugin-ssr.com/head
   const { documentProps } = pageContext.exports
   const title = (documentProps && documentProps.title) || 'Vite SSR app'
-  const desc = (documentProps && documentProps.description) || 'App using Vite + vite-plugin-ssr'
+  const desc = (documentProps && documentProps.description) || 'nextauth + vite-plugin-ssr'
 
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
@@ -38,10 +42,9 @@ async function render(pageContext: PageContextServer) {
 
   return {
     documentHtml,
-    // We can return a `pageContext` promise
-    pageContext: (async () => {
+    pageContext: (() => {
       return {
-        someAsyncProps: 42
+        session
       }
     })()
   }

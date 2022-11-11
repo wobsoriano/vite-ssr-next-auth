@@ -1,16 +1,17 @@
 import type { PageContextClient } from './types'
 import { PageLayout } from "./layout";
 import ReactDOM from 'react-dom/client'
+import { Session } from 'next-auth';
 
 export const clientRouting = true
 export const hydrationCanBeAborted = true
-export { render }
 
 let root: ReactDOM.Root
-async function render(pageContext: PageContextClient) {
-  const { Page, pageProps } = pageContext
+
+export async function render(pageContext: PageContextClient & { session: Session }) {
+  const { Page, pageProps, session } = pageContext
   const page = (
-    <PageLayout>
+    <PageLayout session={session}>
       <Page {...pageProps} />
     </PageLayout>
   )

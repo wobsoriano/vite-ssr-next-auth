@@ -3,7 +3,8 @@ import { renderPage } from 'vite-plugin-ssr'
 import { fetch, Request } from 'node-fetch-native'
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import { authHandler as NextAuthHandler } from './auth/next';
+import { authHandler as NextAuthHandler, authOptions } from './handler';
+import { unstable_getServerSession } from "next-auth/next"
 
 global.fetch = fetch;
 global.Request = Request;
@@ -20,10 +21,10 @@ async function startServer() {
   app.use(cookieParser())
 
   if (isProduction) {
-    const sirv = require('sirv')
+    const sirv = await import('sirv').then(r => r.default || r)
     app.use(sirv(`${root}/dist/client`))
   } else {
-    const vite = require('vite')
+    const vite = await import('vite').then(r => r.default || r)
     const viteDevMiddleware = (
       await vite.createServer({
         root,
@@ -49,9 +50,26 @@ async function startServer() {
     NextAuthHandler(req, res)
   });
 
+  app.get('/api/examples/protected', async (req, res) => {
+    const session = await unstable_getServerSession(req, res, authOptions)
+
+    if (session) {
+      return res.send({
+        content:
+          "This is protected content. You can access this content because you are signed in.",
+      })
+    }
+  
+    res.send({
+      error: "You must be signed in to view the protected content on this page.",
+    })
+  })
+
   app.get('*', async (req, res, next) => {
     const pageContextInit = {
-      urlOriginal: req.originalUrl
+      urlOriginal: req.originalUrl,
+      req,
+      res
     }
     const pageContext = await renderPage(pageContextInit)
     const { httpResponse } = pageContext
