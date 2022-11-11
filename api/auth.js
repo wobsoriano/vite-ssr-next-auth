@@ -14,13 +14,30 @@ const authOptions = {
   ]
 }
 
-export default function handler (req, res) {
-  const nextauth = req.url.split('/')
-  console.log(nextauth)
+function NextAuthHandler (req, res) {
+  const nextauth = req.path.split('/')
   nextauth.splice(0, 3)
-  console.log(nextauth)
   req.query.nextauth = nextauth
-  console.log(req.query)
 
   NextAuth(req, res, authOptions)
 }
+
+app.get('/api/auth/*', NextAuthHandler)
+app.post('/api/auth/*', NextAuthHandler)
+
+app.get('/api/examples/protected', async (req, res) => {
+  const session = await unstable_getServerSession(req, res, authOptions)
+
+  if (session) {
+    return res.send({
+      content:
+          'This is protected content. You can access this content because you are signed in.'
+    })
+  }
+
+  res.send({
+    error: 'You must be signed in to view the protected content on this page.'
+  })
+})
+
+module.exports = app
