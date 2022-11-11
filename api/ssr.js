@@ -4,7 +4,11 @@ export default async function handler (req, res) {
   const { url } = req
   console.log('Request to url:', url)
 
-  const pageContextInit = { url }
+  const pageContextInit = {
+    url,
+    req,
+    res
+  }
   const pageContext = await renderPage(pageContextInit)
   const { httpResponse } = pageContext
 
