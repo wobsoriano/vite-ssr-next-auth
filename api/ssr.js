@@ -5,7 +5,6 @@ global.Request = Request
 
 export default async function handler (req, res) {
   const { url } = req
-  console.log('Request to url:', url)
 
   const pageContextInit = {
     url,
@@ -21,7 +20,8 @@ export default async function handler (req, res) {
     return
   }
 
-  const { body, statusCode, contentType } = httpResponse
+  const { getBody, statusCode, contentType } = httpResponse
+  const body = await getBody()
   res.statusCode = statusCode
   res.setHeader('content-type', contentType)
   res.end(body)
