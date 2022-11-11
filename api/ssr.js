@@ -1,4 +1,7 @@
 import { renderPage } from 'vite-plugin-ssr'
+import { Request } from 'node-fetch-native'
+
+global.Request = Request
 
 export default async function handler (req, res) {
   const { url } = req
