@@ -2,6 +2,7 @@ import React from 'react'
 import { SessionProvider } from "next-auth/react"
 import Header from "./header"
 import Footer from "./footer"
+import './layout.css'
 
 export { PageLayout };
 

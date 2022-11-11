@@ -1,7 +1,6 @@
-import ReactDOMServer from 'react-dom/server'
-import React from 'react'
+import { renderToStream } from 'react-streaming/server'
 import { PageLayout } from './layout'
-import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr'
+import { escapeInject } from 'vite-plugin-ssr'
 import type { PageContextServer } from './types'
 
 export { render }
@@ -10,10 +9,13 @@ export const passToClient = ['pageProps', 'urlPathname']
 
 async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext
-  const pageHtml = ReactDOMServer.renderToString(
+  const stream = await renderToStream(
     <PageLayout>
       <Page {...pageProps} />
-    </PageLayout>
+    </PageLayout>,
+    // We don't need streaming for a pre-rendered app.
+    // (We still use react-streaming to enable <Suspsense>.)
+    { disable: true }
   )
 
   // See https://vite-plugin-ssr.com/head
@@ -30,14 +32,17 @@ async function render(pageContext: PageContextServer) {
         <title>${title}</title>
       </head>
       <body>
-        <div id="page-view">${dangerouslySkipEscape(pageHtml)}</div>
+        <div id="page-view">${stream}</div>
       </body>
     </html>`
 
   return {
     documentHtml,
-    pageContext: {
-      // We can add some `pageContext` here, which is useful if we want to do page redirection https://vite-plugin-ssr.com/page-redirection
-    }
+    // We can return a `pageContext` promise
+    pageContext: (async () => {
+      return {
+        someAsyncProps: 42
+      }
+    })()
   }
 }
