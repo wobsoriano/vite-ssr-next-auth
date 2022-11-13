@@ -4,7 +4,7 @@ import { unstable_getServerSession } from 'next-auth/next'
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import { fetch, Request } from 'node-fetch-native'
+import { fetch, Request } from 'undici'
 import GithubProvider from 'next-auth/providers/github'
 
 global.fetch = fetch
