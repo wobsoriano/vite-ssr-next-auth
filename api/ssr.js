@@ -1,5 +1,5 @@
 import { renderPage } from 'vite-plugin-ssr'
-import { Request } from 'node-fetch-native'
+import { Request } from 'undici'
 
 global.Request = Request
 

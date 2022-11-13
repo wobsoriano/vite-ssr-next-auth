@@ -18,11 +18,11 @@
     "react-dom": "^18.1.0",
     "react-streaming": "^0.3.5",
     "typescript": "^4.6.4",
+    "undici": "^5.12.0",
     "vite": "^3.2.3",
     "vite-plugin-ssr": "^0.4.48"
   },
   "devDependencies": {
-    "vavite": "^1.5.1",
     "@nuxtjs/eslint-config-typescript": "^11.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/cookie-parser": "^1.4.3",
@@ -30,7 +30,8 @@
     "@types/node": "^17.0.31",
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
-    "eslint": "^8.26.0"
+    "eslint": "^8.26.0",
+    "vavite": "^1.5.1"
   },
   "eslintConfig": {
     "extends": [
