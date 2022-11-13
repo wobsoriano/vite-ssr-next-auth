@@ -1,39 +1,23 @@
+/// <reference types="vite/client" />
 import express from 'express'
 import { renderPage } from 'vite-plugin-ssr'
-import { fetch, Request } from 'node-fetch-native'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 // eslint-disable-next-line camelcase
 import { unstable_getServerSession } from 'next-auth/next'
+import httpDevServer from 'vavite/http-dev-server'
 import { NextAuthHandler, authOptions } from './handler'
-
-global.fetch = fetch
-global.Request = Request
-
-const isProduction = process.env.NODE_ENV === 'production'
-// eslint-disable-next-line n/no-path-concat
-const root = `${__dirname}/..`
 
 startServer()
 
-async function startServer () {
+function startServer () {
   const app = express()
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
   app.use(cookieParser())
 
-  if (isProduction) {
-    const sirv = await import('sirv').then(r => r.default || r)
-    app.use(sirv(`${root}/dist/client`))
-  } else {
-    const vite = await import('vite').then(r => r.default || r)
-    const viteDevMiddleware = (
-      await vite.createServer({
-        root,
-        server: { middlewareMode: true }
-      })
-    ).middlewares
-    app.use(viteDevMiddleware)
+  if (import.meta.env.PROD) {
+    app.use(express.static('dist/client'))
   }
 
   app.get('/api/auth/*', NextAuthHandler)
@@ -67,7 +51,11 @@ async function startServer () {
     res.status(httpResponse.statusCode).type(httpResponse.contentType).send(body)
   })
 
-  const port = process.env.PORT || 3000
-  app.listen(port)
-  console.log(`Server running at http://localhost:${port}`)
+  if (import.meta.env.PROD) {
+    const port = process.env.PORT || 3000
+    app.listen(port)
+    console.log(`Server running at http://localhost:${port}`)
+  } else {
+		httpDevServer!.on('request', app)
+  }
 }

@@ -1,11 +1,10 @@
 {
+  "type": "module",
   "scripts": {
-    "dev": "pnpm run server",
-    "prod": "pnpm run build && pnpm run server:prod",
-    "build": "vite build",
+    "dev": "vite --open",
+    "build": "vavite",
     "vercel-build": "vite build",
-    "server": "tsx ./server",
-    "server:prod": "cross-env NODE_ENV=production tsx ./server"
+    "start": "node dist/server"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^2.2.0",
@@ -15,27 +14,23 @@
     "dotenv": "^10.0.0",
     "express": "^4.18.1",
     "next-auth": "^4.16.4",
-    "node-fetch-native": "^0.1.8",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-streaming": "^0.3.5",
-    "sirv": "^2.0.2",
     "typescript": "^4.6.4",
     "vite": "^3.2.3",
     "vite-plugin-ssr": "^0.4.48"
   },
   "devDependencies": {
+    "vavite": "^1.5.1",
     "@nuxtjs/eslint-config-typescript": "^11.0.0",
     "@types/body-parser": "^1.19.2",
-    "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.31",
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
-    "@vercel/ncc": "^0.34.0",
-    "eslint": "^8.26.0",
-    "tsx": "^3.12.0"
+    "eslint": "^8.26.0"
   },
   "eslintConfig": {
     "extends": [
